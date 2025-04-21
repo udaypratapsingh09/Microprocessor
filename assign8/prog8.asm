@@ -23,7 +23,7 @@ section .bss
     num1 resb 1                ; First hex number
     num2 resb 1                ; Second hex number
 
-; Macro to print messages using sys_write - Jatin Yadav 7226
+; Macro to print messages using sys_write - 
 %macro PRINT 2
     mov rax, 1          ; System call number for sys_write
     mov rdi, 1          ; File descriptor (1 = stdout)
@@ -32,7 +32,7 @@ section .bss
     syscall             ; Make system call
 %endmacro
 
-; Macro to accept input using sys_read - Jatin Yadav 7226
+; Macro to accept input using sys_read - 
 %macro ACCEPT 2
     mov rax, 0          ; System call number for sys_read
     mov rdi, 0          ; File descriptor (0 = stdin)
@@ -44,38 +44,33 @@ section .bss
 section .text
     global _start
 _start:
-    ; Display message for first number - Jatin Yadav 7226
     PRINT msg1, msg1len
     ; Accept first number
     ACCEPT ascii_num, 3        ; 2 digits + newline
     call Ascii_to_Hex          ; Convert to hex
     mov [num1], bl             ; Store first number
 
-    ; Display message for second number - Jatin Yadav 7226
     PRINT msg2, msg2len
     ; Accept second number
     ACCEPT ascii_num, 3        ; 2 digits + newline
     call Ascii_to_Hex          ; Convert to hex
     mov [num2], bl             ; Store second number
 
-    ; Perform multiplication using Successive Addition - Jatin Yadav 7226
     call Succ_Add
     PRINT msg3, msg3len        ; Display result header
     PRINT dispbuff, 4          ; Display result
     PRINT newline, 1           ; Newline for formatting
 
-    ; Perform multiplication using Shift and Add - Jatin Yadav 7226
     call Shift_Add
     PRINT msg4, msg4len        ; Display result header
     PRINT dispbuff, 4          ; Display result
     PRINT newline, 1           ; Newline for formatting
 
-    ; Exit program - Jatin Yadav 7226
     mov rax, 60                ; sys_exit
     mov rdi, 0                 ; Return code 0
     syscall
 
-Succ_Add:  ; Successive Addition method - Jatin Yadav 7226
+Succ_Add:
     xor rax, rax               ; Clear RAX
     xor rbx, rbx               ; Clear RBX (result)
     xor rcx, rcx               ; Clear RCX (counter)
@@ -83,8 +78,8 @@ Succ_Add:  ; Successive Addition method - Jatin Yadav 7226
     mov cl, [num2]             ; Load second number into CL (counter)
     
 add_loop:
-    test rcx, rcx              ; Check if counter is zero
-    jz done_succ               ; If zero, exit loop
+    cmp rcx, 0                 ; Check if counter is zero
+    je done_succ               ; If zero, exit loop
     add bx, ax                 ; Add AX to BX (accumulate result)
     dec rcx                    ; Decrease counter
     jmp add_loop               ; Repeat
@@ -93,7 +88,7 @@ done_succ:
     call Hex_to_Ascii          ; Convert result to ASCII
     ret                        ; Return
 
-Shift_Add:  ; Shift and Add method - Jatin Yadav 7226
+Shift_Add:
     xor rcx, rcx               ; Clear RCX (result)
     xor rax, rax               ; Clear RAX
     xor rbx, rbx               ; Clear RBX
@@ -102,8 +97,8 @@ Shift_Add:  ; Shift and Add method - Jatin Yadav 7226
     mov bl, [num2]             ; Load second number into BL
 
 shift_loop:
-    test dx, dx                ; Check if counter is zero
-    jz done_shift              ; If zero, exit loop
+    cmp dx,0                   ; Check if counter is zero
+    je done_shift              ; If zero, exit loop
     shr bl, 1                  ; Shift BL right by 1 bit
     jnc no_add                 ; If no carry, skip addition
     add cx, ax                 ; Add AX to CX (accumulate result)
@@ -118,7 +113,7 @@ done_shift:
     call Hex_to_Ascii          ; Convert result to ASCII
     ret                        ; Return
 
-Hex_to_Ascii:  ; Convert hex result to ASCII - Jatin Yadav 7226
+Hex_to_Ascii:  ; Convert hex result to ASCII - 
     mov rsi, dispbuff          ; Load display buffer address
     mov rcx, 4                 ; Counter for 4 digits
     
@@ -138,7 +133,7 @@ add_30_hex:
     jnz convert_hex            ; Repeat until done
     ret                        ; Return
 
-Ascii_to_Hex:  ; Convert ASCII input to hex - Jatin Yadav 7226
+Ascii_to_Hex:  ; Convert ASCII input to hex
     mov rsi, ascii_num         ; Load input buffer address
     mov rcx, 2                 ; Counter for 2 digits
     xor bl, bl                 ; Clear BL (result)

@@ -25,6 +25,12 @@ section .data
        0xFFFFFFFF00000000, \
        0x7F8E9DA1BC2D3E4F
 
+    before db "Before: ",10
+    beforelen equ $- before
+
+    after db "After: ",10
+    afterlen equ $- after
+
     msg1 db "Source: ",10
     msg1len equ $-msg1
 
@@ -59,12 +65,12 @@ section .text
     exit                            ; default option exit
 
     opt1:
+        io 1,1,before,beforelen
         call print_src
         io 1,1,msg2,msg2len
-        mov rsi,source
-        add rsi,20h
-        mov rdi,source
-        add rdi,30h
+        call print_dest
+        mov rsi,source+20h
+        mov rdi,rsi+10h
         mov rcx,5
         lp1:
             mov rbx,[rsi]
@@ -72,19 +78,25 @@ section .text
             sub rsi, 8
             sub rdi, 8
             loop lp1
+        io 1,1,after, afterlen
+        call print_src
+        io 1,1,msg2,msg2len
         call print_dest
         exit
 
     opt2:
+        io 1,1,before,beforelen
         call print_src
         io 1,1,msg2,msg2len
-        mov rsi,source
-        add rsi,20h
-        mov rdi,source
-        add rdi,30h
+        call print_dest
+        mov rsi,source+20h
+        mov rdi,rsi+10h
         std
         mov rcx,5
         rep movsq
+        io 1,1,after, afterlen
+        call print_src
+        io 1,1,msg2,msg2len
         call print_dest
         exit
 

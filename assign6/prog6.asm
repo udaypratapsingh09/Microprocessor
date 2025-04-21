@@ -29,6 +29,12 @@ section .data
     msg1 db "Source: ",10
     msg1len equ $-msg1
 
+        before db "Before: ",10
+    beforelen equ $- before
+
+    after db "After: ",10
+    afterlen equ $- after
+
     msg2 db "Destination: ",10
     msg2len equ $-msg2
 
@@ -60,7 +66,9 @@ section .text
     exit                            ; default option exit
 
     opt1:
+        io 1,1,before,beforelen
         call print_src
+        call print_dest
         mov rsi,source
         mov rdi,dest
         mov rcx,5
@@ -70,15 +78,21 @@ section .text
             add rsi, 8
             add rdi, 8
             loop lp1
+        io 1,1,after, afterlen
+        call print_src
         call print_dest
         exit
 
     opt2:
+        io 1,1,before,beforelen
         call print_src
+        call print_dest
         mov rsi,source
         mov rdi,dest
         mov rcx,5
         rep movsq
+        io 1,1,after, afterlen
+        call print_src
         call print_dest
         exit
 
